@@ -1,0 +1,32 @@
+{
+  "name": "gh-yaml-sync",
+  "version": "1.0.0",
+  "description": "YAML 기반 GitHub 이슈/마일스톤 CLI 동기화 도구",
+  "main": "bin/index.js",
+  "bin": {
+    "gh-yaml-sync": "bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bisor0627/gh-yaml-sync.git"
+  },
+  "keywords": [
+    "cli",
+    "github",
+    "yaml",
+    "automation"
+  ],
+  "author": "Kirby",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bisor0627/gh-yaml-sync/issues"
+  },
+  "homepage": "https://github.com/bisor0627/gh-yaml-sync#readme",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "js-yaml": "^4.1.0"
+  }
+}
