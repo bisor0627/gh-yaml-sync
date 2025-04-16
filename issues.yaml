@@ -1,0 +1,267 @@
+issues:
+  - number: 21
+    title: 상태 기반 UI 테스트• 재사용 가능한 컴포넌트/함수 정리
+    body: 상태 기반 UI 테스트• 재사용 가능한 컴포넌트/함수 정리
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:17Z'
+    updated_at: '2025-04-16T01:40:17Z'
+    closed_at: null
+  - number: 20
+    title: ViewModel -> View 바인딩 점검
+    body: ViewModel -> View 바인딩 점검
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:15Z'
+    updated_at: '2025-04-16T01:40:15Z'
+    closed_at: null
+  - number: 19
+    title: Placeholder/에러 처리 로직
+    body: Placeholder/에러 처리 로직
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:13Z'
+    updated_at: '2025-04-16T01:40:13Z'
+    closed_at: null
+  - number: 18
+    title: GoalViewModel CRUD 구현
+    body: GoalViewModel CRUD 구현
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:10Z'
+    updated_at: '2025-04-16T01:40:10Z'
+    closed_at: null
+  - number: 17
+    title: Reflection 모델 정의
+    body: Reflection 모델 정의
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:08Z'
+    updated_at: '2025-04-16T01:40:08Z'
+    closed_at: null
+  - number: 16
+    title: GoalInputModalView, GoalEditModalView 설계
+    body: GoalInputModalView, GoalEditModalView 설계
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:06Z'
+    updated_at: '2025-04-16T01:40:06Z'
+    closed_at: null
+  - number: 15
+    title: SwiftLint 등 조사
+    body: SwiftLint 등 조사
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:04Z'
+    updated_at: '2025-04-16T01:40:04Z'
+    closed_at: null
+  - number: 14
+    title: Tuist 조사
+    body: Tuist 조사
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:02Z'
+    updated_at: '2025-04-16T01:40:02Z'
+    closed_at: null
+  - number: 13
+    title: MVC, MVVM, MVVM-C, VIPER 살펴보기
+    body: MVC, MVVM, MVVM-C, VIPER 살펴보기
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:40:00Z'
+    updated_at: '2025-04-16T01:40:00Z'
+    closed_at: null
+  - number: 12
+    title: DivyDot 구조 점검 및 아키텍처 채택
+    body: DivyDot 구조 점검 및 아키텍처 채택
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:39:58Z'
+    updated_at: '2025-04-16T01:39:58Z'
+    closed_at: null
+  - number: 11
+    title: Figma Color/Typo → Swift 118
+    body: Figma Color/Typo → Swift 118
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:39:56Z'
+    updated_at: '2025-04-16T01:39:56Z'
+    closed_at: null
+  - number: 10
+    title: 테마/다크모드 설계 가능성 탐색 (Theme 적용)
+    body: 스위프트 내 테마 및 라이트/다크모드 적용 코드 레퍼런스 조사
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:39:54Z'
+    updated_at: '2025-04-16T01:39:54Z'
+    closed_at: null
+  - number: 9
+    title: Swift DesignSystem 적용 레퍼런스 조사
+    body: Swift DesignSystem 적용 레퍼런스 조사
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:39:52Z'
+    updated_at: '2025-04-16T01:39:52Z'
+    closed_at: null
+  - number: 8
+    title: Swift 재사용 가능한 컴포넌트 구조 설계
+    body: Swift 재사용 가능한 컴포넌트 구조 설계
+    labels:
+      - 완료
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:39:50Z'
+    updated_at: '2025-04-16T01:39:50Z'
+    closed_at: null
+  - number: 7
+    title: Swift 상태관리 개념 정리 (State Management)
+    body: Swift 상태관리 개념 정리 (State Management)
+    labels:
+      - 할 일
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T01:39:48Z'
+    updated_at: '2025-04-16T01:39:48Z'
+    closed_at: null
+  - number: 6
+    title: Reflect 버튼 상태 관리
+    body: |-
+      입력 값 여부에 따라 Reflect 버튼의 활성/비활성 상태를 관리
+      - 상태 정의표 기준으로 동작 확인
+    labels:
+      - feature
+    assignees: []
+    milestone: DivyDot Prototype 1
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-15T07:35:08Z'
+    updated_at: '2025-04-16T01:43:47Z'
+    closed_at: null
+  - number: 5
+    title: Dialog UI 구현 및 컴포넌트화
+    body: 목표와 회고 작성에 공통으로 사용할 수 있는 Dialog 컴포넌트를 분리하여 재사용 가능하게 구성
+    labels: []
+    assignees: []
+    milestone: DivyDot Prototype 1
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-15T07:35:05Z'
+    updated_at: '2025-04-16T01:43:35Z'
+    closed_at: null
+  - number: 4
+    title: 회고 리스트 보기 기능
+    body: |-
+      작성된 회고를 리스트 형태로 확인할 수 있는 기능 구현
+      - 최신순 정렬
+      - 목표 여부에 따라 분기
+    labels:
+      - feature
+    assignees: []
+    milestone: DivyDot Prototype 1
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-15T07:35:02Z'
+    updated_at: '2025-04-16T01:43:13Z'
+    closed_at: null
+  - number: 3
+    title: 회고 작성 기능
+    body: |-
+      Cycle 내에서 회고를 텍스트 형태로 작성할 수 있도록 구현
+      - 목표가 있을 경우 연동
+      - 없을 경우 goalID=null 처리
+    labels:
+      - feature
+    assignees: []
+    milestone: DivyDot Prototype 1
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-15T07:34:59Z'
+    updated_at: '2025-04-16T01:43:04Z'
+    closed_at: null
+  - number: 2
+    title: 목표 수정 및 삭제 기능
+    body: |-
+      기존 목표를 편집하거나 삭제할 수 있는 기능 구현
+      - Tap 시 Dialog 호출
+      - 삭제 시 회고 유지 여부 확인
+    labels:
+      - feature
+    assignees: []
+    milestone: DivyDot Prototype 1
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-15T07:34:55Z'
+    updated_at: '2025-04-16T01:42:42Z'
+    closed_at: null
+  - number: 1
+    title: 목표 생성 기능 구현
+    body: |-
+      사용자가 Cycle 단위로 목표를 생성할 수 있는 기능 구현
+      - 텍스트 입력
+      - 저장 버튼
+      - 상태 변화 적용
+    labels:
+      - feature
+    assignees: []
+    milestone: DivyDot Prototype 1
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-15T07:34:51Z'
+    updated_at: '2025-04-16T01:42:30Z'
+    closed_at: null

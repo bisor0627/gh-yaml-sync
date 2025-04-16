@@ -158,11 +158,64 @@ function syncMilestonesFromYaml(path, repo) {
   }
 }
 
+function dumpIssues(path, repo) {
+  const issues = JSON.parse(
+    execSync(`gh issue list ${getRepoFlag(repo)} --state all --json number,title,body,labels,assignees,milestone,createdAt,updatedAt,closedAt,state,author`, {
+      encoding: "utf-8",
+    })
+  );
+
+  const cleaned = issues.map((i) => ({
+    number: i.number,
+    title: i.title,
+    body: i.body,
+    labels: i.labels?.map((l) => l.name),
+    assignees: i.assignees?.map((a) => a.login),
+    milestone: i.milestone?.title || null,
+    author: i.author?.login,
+    state: i.state,
+    created_at: i.createdAt,
+    updated_at: i.updatedAt,
+    closed_at: i.closedAt,
+  }));
+
+  writeYaml(path, { issues: cleaned });
+  console.log(`📥 이슈 ${cleaned.length}개를 YAML로 저장했습니다: ${path}`);
+}
+
+
+function dumpMilestones(path, repo) {
+  const milestones = JSON.parse(
+    execSync(`gh api repos/${repo}/milestones --paginate`, { encoding: "utf-8" })
+  );
+
+  milestones.sort((a, b) => new Date(a.due_on) - new Date(b.due_on));
+
+  const mapped = milestones.map((m) => ({
+    number: m.number,
+    title: m.title,
+    description: m.description || "",
+    state: m.state,
+    due_on: m.due_on?.split("T")[0] || "",
+    created_at: m.created_at,
+    updated_at: m.updated_at,
+    open_issues: m.open_issues,
+    closed_issues: m.closed_issues,
+  }));
+
+  writeYaml(path, { milestones: mapped });
+  console.log(`📦 마일스톤 ${mapped.length}개를 YAML로 저장했습니다: ${path}`);
+}
+
+
+
 module.exports = {
   // 기존 함수들과 함께 추가
   syncIssuesFromYaml,
   syncMilestonesFromYaml,
   assignIssuesToMilestones,
+  dumpIssues, 
+  dumpMilestones, 
   readYaml,
   writeYaml,
 };
