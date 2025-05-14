@@ -1,0 +1,774 @@
+issues:
+  - number: 61
+    title: CycleProgressView의 updateSelectedCycle 메서드에 빈 배열 처리 로직 추가
+    body: |-
+      ## 설명
+      CycleProgressView의 updateSelectedCycle 메서드는 현재 cycles 배열이 비어 있을 경우에 대한 처리가 없습니다. 이로 인해 앱이 시작될 때나 데이터가 로드되기 전에 잠재적인 문제가 발생할 수 있습니다.
+
+      ## 참조
+      - PR: https://github.com/bisor0627/DiverCompass/pull/56
+      - 코멘트: https://github.com/bisor0627/DiverCompass/pull/56#discussion_r2054348183
+
+      @bisor0627님이 PR 리뷰 중 이슈 등록을 요청하셨습니다.
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: OPEN
+    created_at: '2025-04-23T03:33:28Z'
+    updated_at: '2025-04-23T03:33:28Z'
+    closed_at: null
+  - number: 60
+    title: PopupCardView 저장 버튼 로직 개선
+    body: |-
+      ## 개선 사항
+        
+      PopupCardView의 저장 버튼 로직을 개선하여 코드 가독성과 유지보수성을 높이는 작업이 필요합니다.
+
+      ### 현재 상태
+      저장 버튼의 로직(텍스트 트리밍, 저장, 닫기)이 인라인으로 구현되어 있어 코드가 복잡해 보입니다.
+
+      ### 개선 방향
+      - 저장 버튼 로직을 별도의 메서드로 추출
+      - 비활성화 상태 계산을 변수로 분리
+
+      ### 참조
+      - PR: https://github.com/bisor0627/DiverCompass/pull/56
+      - 코멘트: https://github.com/bisor0627/DiverCompass/pull/56#discussion_r2054348174
+
+      @bisor0627님의 요청으로 생성된 이슈입니다.
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: OPEN
+    created_at: '2025-04-23T03:33:19Z'
+    updated_at: '2025-04-23T03:33:19Z'
+    closed_at: null
+  - number: 59
+    title: 팝업 외부 탭 시 텍스트 보존 기능 개선
+    body: |-
+      ## 문제점
+      PopupCardView에서 사용자가 텍스트를 편집하는 동안 실수로 배경을 탭하면 작성 중인 내용이 저장되지 않고 즉시 팝업이 닫힙니다.
+
+      ## 개선 방안
+      배경 탭 시 키보드가 활성화된 상태(텍스트 편집 중)인지 확인하는 로직을 추가하여 사용자 데이터 손실을 방지합니다.
+
+      ```swift
+      Color.black
+          .opacity(backgroundOpacity)
+          .ignoresSafeArea()
+          .onTapGesture {
+              // 키보드가 활성화된 상태인지 확인 후 닫기
+              UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+              // 약간의 지연 후에 dismiss 처리
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                  dismissWithFade()
+              }
+          }
+      ```
+
+      ## 관련 참조
+      - PR: https://github.com/bisor0627/DiverCompass/pull/56
+      - 코멘트: https://github.com/bisor0627/DiverCompass/pull/56#discussion_r2054348173
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: OPEN
+    created_at: '2025-04-23T03:33:15Z'
+    updated_at: '2025-04-23T03:33:15Z'
+    closed_at: null
+  - number: 58
+    title: iOS Storyboard 최적화 및 베스트 프랙티스 학습
+    body: |-
+      ## 배경
+      PR #56 검토 중 LaunchScreen.storyboard에서 불필요한 빈 레이블 사용을 발견했습니다.
+
+      ## 학습 목표
+      - Storyboard에서 Safe Area 레이아웃 가이드 활용 방법 학습
+      - 불필요한 UI 요소를 제거하고 최적화하는 방법 연구
+      - Storyboard 구성 시 베스트 프랙티스 정리
+
+      ## 참고 링크
+      - PR 논의: https://github.com/bisor0627/DiverCompass/pull/56#discussion_r2054348065
+
+      ## 관련 문서
+      - [Apple UIKit 문서 - Safe Area](https://developer.apple.com/documentation/uikit/uiview/positioning_content_relative_to_the_safe_area)
+      - [Apple Interface Builder 가이드](https://developer.apple.com/library/archive/documentation/ToolsLanguages/Conceptual/Xcode_Overview/UsingInterfaceBuilder.html)
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: OPEN
+    created_at: '2025-04-23T03:12:05Z'
+    updated_at: '2025-04-23T03:12:05Z'
+    closed_at: null
+  - number: 57
+    title: 'AppIcon 에셋 구성 개선 필요: scale 속성 및 appearance별 filename 설정'
+    body: |-
+      ## 문제점
+      AppIcon 에셋 구성에 다음 문제가 발견되었습니다:
+
+      1. 기본 아이콘에 filename 속성은 추가되었으나 scale 속성이 누락됨
+      2. 다크 모드와 틴티드 모드에 대한 filename 속성이 설정되지 않음
+
+      ## 참고 자료
+      - Apple 문서: App icons
+        https://developer.apple.com/design/human-interface-guidelines/app-icons
+        
+      - Xcode 문서: Asset Catalog Format Reference
+        https://developer.apple.com/library/archive/documentation/Xcode/Reference/xcode_ref-Asset_Catalog_Format
+
+      - iOS App Icon with Dark Mode 관련 Stack Overflow 질문
+        https://stackoverflow.com/questions/58459108/ios-app-icon-with-dark-mode
+
+      ## 개선 방안
+      1. 모든 아이콘 항목에 scale:"1x" 속성 추가
+      2. 다크 모드용 아이콘 파일명 지정 (예: icon_dark_1024pt@1x.png)
+      3. 틴티드 모드용 아이콘 파일명 지정 (예: icon_tinted_1024pt@1x.png)
+
+      이 PR에서 발견된 문제: 
+      https://github.com/bisor0627/DiverCompass/pull/56#discussion_r2054348055
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: OPEN
+    created_at: '2025-04-23T00:16:57Z'
+    updated_at: '2025-04-23T00:16:57Z'
+    closed_at: null
+  - number: 54
+    title: '✨ Feature: 앱 아이콘/런처 설정 및 README 브랜딩 개선'
+    body: "### 🏷️ Description\n\n앱의 정체성과 초기 인상을 구성하기 위한 리소스를 추가하고,\n해저 탐험이라는 DivyDot의 콘셉트가 잘 드러나도록 README를 리디자인합니다.\n- 앱 아이콘(.appiconset) 설정\n- 런처 스크린(LaunchScreen.storyboard, 이미지) 구성\n\nREADME에 다음 정보 시각적으로 반영\n- 앱 개요/목표\n- Exploratory Learning Cycle 표\n- 주요 기능 및 이미지\n- 앱 데모 영상/이미지\n- Milestone, Project, Issues 상태 시각화\n\n### 🍪 TODO\n\n- [ ] \t앱 아이콘 1024pt 이미지 추가\n- [ ] 런처 이미지 1x/2x/3x 설정\n- [ ] LaunchScreen.storyboard 구성\n- [ ] README 전체 개편 및 이미지 추가\n- [ ] Milestone, Project, Issue 상태 시각화 추가"
+    labels: []
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-22T15:07:57Z'
+    updated_at: '2025-04-22T15:07:57Z'
+    closed_at: null
+  - number: 50
+    title: 🧩 Cycle 데이터 구조 리팩토링 – Grouped → Flat+Relational
+    body: |
+      ## ✅ 현재 상황 (As-Is)
+
+      현재 앱에서는 애플 디벨로퍼 아카데미 4기 공식`탐사여정`데이터를 활용하여 `kCycles: [Cycle]` 기반으로 전체 일정 데이터를 관리하고 있습니다.  
+      각 Cycle은 고유한 이름과 기간을 갖고 있으며, `Challenge`, `Bridge` 등의 구분만 존재할 뿐, 계층 구조는 갖고 있지 않습니다.
+
+      ```swift
+      struct Cycle {
+          let name: String
+          let type: CycleType
+          let startDate: Date
+          let endDate: Date
+      }
+      ```
+
+      ## 🚨 문제점
+      - 
+      - 전체 여정의 범위를 가져올 때, kCycles.first?.startDate, kCycles.last?.endDate를 직접 참조하고 있음
+      - 여러 Cycle을 하나의 목표 단위로 묶는 것이 불가능함
+      - 회고/목표 UI가 항상 단일 Cycle 기준으로 구성됨 → 유저가 큰 단위로 의미를 구성할 수 없음
+
+      ## 🧭 개선 방향 (To-Be)
+
+      ### 1단계 – GroupedCycle 적용
+
+      Cycle을 상위 단위(Challenge 1, Challenge 2 등)로 그룹화하고, 하위 Cycle들을 배열로 관리합니다.
+
+      ```swift
+      struct GroupedCycle: Identifiable {
+          let id = UUID()
+          let name: String
+          let cycles: [Cycle]  // 예: Challenge2 + Bridge2 등
+      }
+      ```
+
+      이 구조를 기반으로 전체 여정 진행률, 목표, 회고 등을 그룹 단위로 묶어서 시각화할 수 있습니다.
+
+      ### 2단계 – Flat + Relational 구조로 리팩토링 예정
+
+      향후에는 다음과 같은 구조로 리팩토링할 예정입니다:
+
+      ```swift
+      struct Cycle: Identifiable {
+          let id: UUID
+          let name: String
+          let type: CycleType
+          let startDate: Date
+          let endDate: Date
+          let parentID: UUID?  // nil이면 Group (ex: Challenge 2)
+      }
+      ```
+
+      - 계층 관계를 parentID로 명시적으로 표현
+      - DB/디스크 저장 구조와 친화적
+      - 추후 Graph 기반 구조로 확장도 용이
+
+      ✨ 작업 필요 목록
+      - [ ] 기존 kCycles → groupedCycles: [GroupedCycle]으로 전환
+      - [ ] GroupedCycle 구조 기반으로 기존 진행률/목표/회고 UI 대응
+      - [ ] 내부 Cycle → ViewModel/Storage/Popup 대응 수정
+      - [ ] Flat 구조로 마이그레이션하는 함수/테스트 코드 설계
+    labels:
+      - refactoring
+    assignees: []
+    milestone: 📚 Study Backlog
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-21T03:35:34Z'
+    updated_at: '2025-04-22T07:31:40Z'
+    closed_at: '2025-04-22T07:31:40Z'
+  - number: 48
+    title: '✨ Feat: 전체 뷰 UI/UX 기반 기능 개선'
+    body: |-
+      ### 🏷️ Description
+
+      사용자 경험(UX)을 개선하기 위해
+      MainView와 관련된 하위 뷰 전반에 걸쳐 UI/UX 기반 기능 수정 작업을 진행합니다.
+      단일 이슈 아래 여러 개의 기능 커밋을 순차적으로 쌓아가며 반영할 예정입니다.
+
+      ### 🍪 TODO
+
+      - [ ] 진행률 뷰의 전체/현재 전환 UX 개선
+      - [ ] 목표 영역의 상태 및 문구 정비
+      - [ ] 탭 제스처, 애니메이션, 색상 피드백 도입
+      - [ ] 목표/회고 입력 흐름 간결화
+      - [ ] 전체 뷰 레이아웃 조정 (간격, 정렬 등)
+      - [ ] 접근성 향상 (폰트 크기, 색상 대비 등)
+    labels:
+      - feature
+    assignees: []
+    milestone: DivyDot Milestone 3 – 디자인 시스템 및 애니메이션 적용
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-18T08:50:22Z'
+    updated_at: '2025-04-22T07:31:40Z'
+    closed_at: '2025-04-22T07:31:40Z'
+  - number: 46
+    title: '🐛 Bug: 사이클별 개별 목표 저장 방식'
+    body: "### 🏷️ Description\n\n현재는 단일 currentCycleGoal 상태로 인해 사이클이 변경되어도 목표가 유지되는 문제가 있음.\n사이클마다 개별 목표를 저장하고 불러올 수 있도록 Dictionary 구조로 개선이 필요함.\n\n### 🍪 TODO\n\n- [ ] \tcurrentCycleGoal → [String: CycleGoal] 형태로 변경\n- [ ] MainView에서 현재 사이클 이름으로 목표 참조\n- [ ] SettingView로 현재 사이클 이름 전달\n- [ ] 목표 저장/삭제 시 해당 이름을 기준으로 처리\n"
+    labels:
+      - bug
+      - refactoring
+    assignees: []
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-18T08:19:00Z'
+    updated_at: '2025-04-18T08:47:20Z'
+    closed_at: '2025-04-18T08:47:19Z'
+  - number: 44
+    title: '✨ Feat: MainView에서 날짜 조작 기능 추가'
+    body: "### 🏷️ Description\n\nMainView에서 현재 날짜를 조작할 수 있는 기능을 추가하여\nCycleProgress 테스트를 쉽게 할 수 있도록 개선합니다.\n\n이 기능은 테스트를 위함으로, 1차 Prototype 마무리 전 제거합니다.\n\n### 🍪 TODO\n\n- [ ] \tMainView에 날짜 상태 변수(currentDate) 추가\n- [ ] CycleProgressUtil 호출 시 현재 날짜 기준으로 진행률 계산\n- [ ] 날짜를 하루 전/후로 변경할 수 있는 버튼 추가\n- [ ] 현재 날짜를 포맷된 텍스트로 표시__"
+    labels:
+      - feature
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-18T07:31:05Z'
+    updated_at: '2025-04-18T08:47:34Z'
+    closed_at: '2025-04-18T08:47:33Z'
+  - number: 43
+    title: '♻️ 리팩토링: bindingText(for:) 함수를 WritableKeyPath를 활용하여 개선'
+    body: |-
+      ## 개선 목표
+
+      `bindingText(for:)` 메서드를 Swift의 WritableKeyPath를 활용하여 리팩토링
+
+      ## 현재 구현
+      ```swift
+      private func bindingText(for mode: PopupCardMode) -> Binding<String> {
+          switch mode {
+          case .globalGoal:
+              return $globalGoalText
+          case .cycleGoal:
+              return $cycleGoalText
+          case .reflection:
+              return $reflectionText
+          }
+      }
+      ```
+
+      ## 개선 방향
+      다음과 같이 WritableKeyPath를 활용하여 개선:
+
+      ```swift
+      private func bindingText(for mode: PopupCardMode) -> Binding<String> {
+          let keyPath: WritableKeyPath<SettingView, String>
+          switch mode {
+          case .globalGoal:
+              keyPath = \.globalGoalText
+          case .cycleGoal:
+              keyPath = \.cycleGoalText
+          case .reflection:
+              keyPath = \.reflectionText
+          }
+          return self.$[keyPath: keyPath]
+      }
+      ```
+
+      더 나아가 딕셔너리를 활용한 접근법도 고려:
+
+      ```swift
+      private let textKeyPathMap: [PopupCardMode: WritableKeyPath<SettingView, String>] = [
+          .globalGoal: \.globalGoalText,
+          .cycleGoal: \.cycleGoalText,
+          .reflection: \.reflectionText
+      ]
+
+      private func bindingText(for mode: PopupCardMode) -> Binding<String> {
+          guard let keyPath = textKeyPathMap[mode] else {
+              fatalError("지원되지 않는 모드: \(mode)")
+          }
+          return self.$[keyPath: keyPath]
+      }
+      ```
+
+      ## 개선 이점
+      - **타입 안전성**: 컴파일 타임에 속성 접근의 유효성 검사
+      - **코드 간결성과 가독성**: 반복적인 스위치 문 제거
+      - **유지보수성 향상**: 새로운 case 추가 시 매핑만 업데이트
+      - **확장 가능한 설계**: 추가 모드나 속성이 증가해도 쉽게 확장 가능
+      - **SwiftUI와의 통합성**: SwiftUI 패턴과 일관된 접근 방식
+
+      ## 참조
+      - PR 논의: https://github.com/bisor0627/DiverCompass/pull/42#discussion_r2049188293
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: CLOSED
+    created_at: '2025-04-18T02:39:16Z'
+    updated_at: '2025-04-22T07:31:39Z'
+    closed_at: '2025-04-22T07:31:39Z'
+  - number: 41
+    title: progressList 동적 업데이트 로직 개선 필요
+    body: |-
+      ## 문제점
+
+      현재 `MainView.swift`에서 `progressList`가 `@State` 변수로 변경되어 View 초기화 시점에만 한 번 계산되고 있습니다:
+
+      ```swift
+      @State private var progressList: [CycleProgress] = CycleProgressUtil.generateProgressList(
+          from: kCycles
+      )
+      ```
+
+      이로 인해 다음과 같은 문제가 발생합니다:
+      - 날짜가 변경되어도(예: 다음 날 앱을 실행해도) progressBar가 자동으로 업데이트되지 않음
+      - 앱 실행 시점에 계산된 상태로 고정됨
+
+      ## 해결 방안
+
+      CRUD 기능 구현 후 다음 방법 중 하나를 적용해 개선:
+      1. ViewModel 또는 ObservableObject를 도입해 사이클 데이터를 @Published로 관리
+      2. `progressList`를 computed property로 다시 변경
+      3. `.onChange(of:)` / `.onReceive(_:)`를 활용해 날짜 변경 시 progressList 재생성
+      4. 화면 진입 시(onAppear) 및 데이터 변경 시 progressList를 갱신하는 메커니즘 구현
+
+      ## 참조
+      - PR #40
+      - 파일: Projects/DibyDot/DibyDot/Views/Main/MainView.swift
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: CLOSED
+    created_at: '2025-04-17T12:54:32Z'
+    updated_at: '2025-04-18T08:48:11Z'
+    closed_at: '2025-04-18T08:48:11Z'
+  - number: 38
+    title: '🔧 Chore: 코드래빗 SwiftLint 설정 경로 명시'
+    body: |-
+      ### 🏷️ Description
+
+      기존 `.coderabbit.yaml` 내 `swiftlint` 설정에 `config_file` 경로가 명시되어 있지 않아,  
+      프로젝트 내 커스텀 `.swiftlint.yml`이 제대로 반영되지 않는 문제가 있었음.  
+      SwiftLint 설정 파일의 정확한 경로를 지정하여 코드래빗 코드리뷰 시 사용되도록 설정함.
+
+
+      ### 🍪 TODO
+
+      - [ ] `.coderabbit.yaml`에 `config_file` 경로 추가
+      - [ ] 설정 적용 확인 (PR 머지 전 테스트)
+    labels: []
+    assignees: []
+    milestone: DivyDot Milestone 1 – 아키텍처 확립 및 설계
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-17T09:56:45Z'
+    updated_at: '2025-04-17T10:27:12Z'
+    closed_at: '2025-04-17T10:27:12Z'
+  - number: 36
+    title: '문서화: Swift의 enum 네임스페이스 패턴 가이드'
+    body: |-
+      ## 설명
+      Swift에서는 enum을 네임스페이스(namespace)로 사용하는 패턴이 일반적입니다. 이는 관련 상수나 유틸리티 함수를 논리적으로 그룹화하고 인스턴스화를 방지하는 효과적인 방법입니다. Flutter/Dart 환경에서 작업할 때는 익숙하지 않을 수 있는 Swift의 고유한 패턴입니다.
+
+      ## 패턴 예시
+      ### 1. 기본 사용법
+      ```swift
+      enum Colors {
+          static let primary = UIColor(red: 0.1, green: 0.2, blue: 0.3, alpha: 1.0)
+          static let secondary = UIColor(red: 0.3, green: 0.4, blue: 0.5, alpha: 1.0)
+      }
+
+      // 사용: Colors.primary
+      ```
+
+      ### 2. 중첩 네임스페이스
+      ```swift
+      enum API {
+          static let baseURL = "https://api.example.com"
+          
+          enum Endpoints {
+              static let users = "/users"
+              static let posts = "/posts"
+          }
+          
+          enum Headers {
+              static let contentType = "Content-Type"
+              static let authorization = "Authorization"
+          }
+      }
+
+      // 사용: API.baseURL, API.Endpoints.users, API.Headers.contentType
+      ```
+
+      ## 장점
+      1. **인스턴스화 방지**: enum은 인스턴스를 생성할 수 없어 순수한 네임스페이스로 작동
+      2. **네임스페이스 제공**: 관련된 상수들을 논리적으로 그룹화
+      3. **코드 조직화**: 중첩 enum을 통해 계층적 구조 생성 가능
+      4. **메모리 효율성**: 빈 enum은 메모리를 거의 사용하지 않음
+
+      ## 실제 사용 사례
+      1. **Apple의 SwiftUI**:
+      ```swift
+      enum EnvironmentValues {
+          static let calendar = EnvironmentKey(Calendar.current)
+          static let locale = EnvironmentKey(Locale.current)
+      }
+      ```
+
+      2. **Alamofire**:
+      ```swift
+      enum AFInfo {
+          static let version = "5.6.4"
+          enum Headers {
+              static let contentType = "Content-Type"
+          }
+      }
+      ```
+
+      ## 대안
+      ```swift
+      // 상위 레벨 상수
+      let colors = [
+          "primary": UIColor(red: 0.1, green: 0.2, blue: 0.3, alpha: 1.0),
+          "secondary": UIColor(red: 0.3, green: 0.4, blue: 0.5, alpha: 1.0)
+      ]
+
+      // struct + private 생성자
+      struct Colors {
+          static let primary = UIColor(red: 0.1, green: 0.2, blue: 0.3, alpha: 1.0)
+          static let secondary = UIColor(red: 0.3, green: 0.4, blue: 0.5, alpha: 1.0)
+          private init() {} // 인스턴스화 방지
+      }
+      ```
+
+      ## 참조
+      - [Swift 포럼 논의](https://forums.swift.org/t/static-let-in-enum-vs-struct/36152)
+      - [Khanlou: Easy Namespacing in Swift](https://khanlou.com/2016/06/easy-namespacing-in-swift/)
+      - PR 토론: https://github.com/bisor0627/DiverCompass/pull/33#discussion_r2048053699
+    labels:
+      - documentation
+    assignees:
+      - bisor0627
+    milestone: 📚 Study Backlog
+    author: app/coderabbitai
+    state: CLOSED
+    created_at: '2025-04-17T06:29:57Z'
+    updated_at: '2025-04-22T07:32:50Z'
+    closed_at: '2025-04-22T07:32:50Z'
+  - number: 35
+    title: 🌐 문자열 국제화(Localization) 적용
+    body: |-
+      ## 설명
+      앱 내 하드코딩된 문자열에 대한 국제화(localization) 작업이 필요합니다.
+
+      ## 개선 필요 사항
+      - `Projects/DibyDot/DibyDot/Views/Main/CycleProgressView.swift` 파일에서 "현재 진행 중인 사이클이 없습니다." 문자열을 국제화
+      - Localizable.strings 파일 생성 및 설정 (아직 없는 경우)
+      - 기타 하드코딩된 문자열 검색 및 국제화 적용
+
+      ## 참조
+      - PR 논의: https://github.com/bisor0627/DiverCompass/pull/33#discussion_r2048053686
+
+      ## 우선순위
+      이 이슈는 백로그 항목으로 지정되어 향후 작업 예정입니다.
+    labels: []
+    assignees:
+      - bisor0627
+    milestone: null
+    author: app/coderabbitai
+    state: CLOSED
+    created_at: '2025-04-17T02:40:56Z'
+    updated_at: '2025-04-22T07:32:49Z'
+    closed_at: '2025-04-22T07:32:49Z'
+  - number: 34
+    title: '✨ Feat: 메시지 국제화 고려가 필요합니다'
+    body: "              _🧹 Nitpick (assertive)_\r\n\r\n**메시지 국제화 고려가 필요합니다.**\r\n\r\n\"현재 진행 중인 사이클이 없습니다.\"라는 메시지가 하드코딩 되어 있습니다. 다국어 지원을 위해 국제화(localization)를 적용하는 것이 좋겠습니다.\r\n\r\n\r\n다음과 같이 LocalizedStringKey로 변경하는 것을 권장합니다:\r\n```diff\r\n- Text(\"현재 진행 중인 사이클이 없습니다.\")\r\n+ Text(\"no_current_cycle_message\")\r\n```\r\n\r\n그리고 Localizable.strings 파일에 다음을 추가:\r\n```\r\n\"no_current_cycle_message\" = \"현재 진행 중인 사이클이 없습니다.\";\r\n```\r\n\r\n\r\n<!-- suggestion_start -->\r\n\r\n<details>\r\n<summary>📝 Committable suggestion</summary>\r\n\r\n> ‼️ **IMPORTANT**\r\n> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.\r\n\r\n`````suggestion\r\n    func createProgressText(cycle: CycleProgress?) -> some View {\r\n        if let cycle = cycle {\r\n            Text(\"\\(Int(cycle.progressRatio * 100))% (\\(cycle.daysPassed)/\\(cycle.totalDays) days)\")\r\n                .font(.caption)\r\n                .foregroundColor(.secondary)\r\n        } else {\r\n            Text(\"no_current_cycle_message\")\r\n                .font(.caption)\r\n                .foregroundColor(.gray)\r\n        }\r\n    }\r\n`````\r\n\r\n</details>\r\n\r\n<!-- suggestion_end -->\r\n\r\n<!-- This is an auto-generated comment by CodeRabbit -->\r\n\r\n_Originally posted by @coderabbitai[bot] in https://github.com/bisor0627/DiverCompass/pull/33#discussion_r2048053686_\r\n            "
+    labels: []
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-17T02:39:10Z'
+    updated_at: '2025-04-17T04:03:29Z'
+    closed_at: '2025-04-17T04:03:29Z'
+  - number: 32
+    title: '✨ Feat: 사이클 진행률 UI 구현 (Type 1 & Type 2)'
+    body: "### 🏷️ Description\n사용자의 사이클 진행 현황을 시각화하여 동기 부여와 현재 위치 파악을 돕는 UI를 SwiftUI로 구현한다.\n\n\n### ✅ 결과 정리 (2025-04-16 기준)\n\n![Image](https://github.com/user-attachments/assets/a63c6c54-1c19-409c-9c3e-35b986557ff8)\n\n🔹 Type 1: 현재 활성화된 사이클 진행률\n-\t이름: Challenge 2\n-\t진행일수: 10일 / 총 19일\n-\t진행률: 53%\n\n🔹 Type 2: 전체 사이클에 대한 진행률 목록\n\n| 이름          | 진행률    | 진행일수     |\n| ----------- | ------ | -------- |\n| Prelude     | ✅ 100% | 6 / 6일   |\n| Challenge 1 | ✅ 100% | 13 / 13일 |\n| Bridge 1    | ✅ 100% | 6 / 6일   |\n| Challenge 2 | 🔥 53% | 10 / 19일 |\n| 이후 사이클들     | ⏳ 0%   | 아직 시작 전  |\n\n### 🍪 TODO\n- [ ] Cycle 데이터 모델에서 현재 진행률 및 날짜 계산 함수 점검\n- [ ] 현재 사이클 진행률 뷰 구성 (Type 1)\n- [ ] 전체 사이클 목록에 따른 점선 뷰 구성 (Type 2)\n- [ ] 데이터 반영되는 UI 유닛 테스트 작성"
+    labels:
+      - feature
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T12:25:03Z'
+    updated_at: '2025-04-17T06:33:57Z'
+    closed_at: '2025-04-17T06:33:57Z'
+  - number: 30
+    title: 🔧 SwiftLint 설정 파일 이동 및 프로젝트별 규칙 추가
+    body: "### 🏷️ Description\n\n### SwiftLint 설정 파일을 통합 루트에서 각 프로젝트 하위 디렉터리로 이동하고, 각 프로젝트에 맞는 린트 규칙을 적용합니다.\n\n### 🎯 목적\n- 팀 프로젝트마다 다른 린트 스타일을 유연하게 적용할 수 있도록 하기 위함\n- 전체 코드베이스의 스타일 정합성을 높이고, PR 리뷰 시 혼선을 줄이기 위함\n\n### Ref\n- https://velog.io/@oasis444/SwiftLint-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0\n\n### 🍪 TODO\n\n- [ ] \t.swiftlint.yml 파일을 프로젝트 상위로 이동\n- [ ] 설정 적용 후 정상 작동 여부 확인 (Lint 통과)"
+    labels: []
+    assignees: []
+    milestone: DivyDot Milestone 1 – 아키텍처 확립 및 설계
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T11:26:23Z'
+    updated_at: '2025-04-16T12:11:20Z'
+    closed_at: '2025-04-16T12:11:19Z'
+  - number: 28
+    title: CodeRabbit .yaml 수정
+    body: |-
+      ### 🏷️ Description
+
+      ### #27 에서 코드래빗 .yaml 구문 오류로 warning발생
+
+
+      ### 🍪 TODO
+
+      - [ ] `.coderabbit.yaml`수정
+    labels:
+      - wontfix
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 1 – 아키텍처 확립 및 설계
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T11:08:09Z'
+    updated_at: '2025-04-16T11:16:40Z'
+    closed_at: '2025-04-16T11:16:39Z'
+  - number: 26
+    title: TCA vs MVVM 아키텍처 비교 및 이해
+    body: |
+      Swift 기반 앱 개발에서 자주 비교되는 아키텍처인 MVVM과 TCA의 개념 및 차이점 정리하기
+
+      ## ✅ 목표
+      - MVVM과 TCA의 개념, 구성요소, 장단점을 명확히 파악
+      - 프로젝트 규모에 따라 어떤 구조가 적합한지 이해
+      - 향후 팀 프로젝트 아키텍처 설계 시 참고할 수 있는 기준 마련
+
+      ## 📌 비교 요약
+
+      | 항목 | MVVM | TCA |
+      |------|------|-----|
+      | **핵심 구조** | Model-View-ViewModel | Store-State-Action-Reducer |
+      | **상태 관리** | ViewModel에서 상태 보유 | Store를 통한 상태 일원화 |
+      | **테스트성** | ViewModel 단위 테스트 | 전체 흐름 단위 시나리오 테스트까지 용이 |
+      | **의존성 관리** | 자유도 높음 | 명시적 DI 구조 제공 |
+      | **러닝커브** | 상대적으로 쉬움 | 높음 (구조 복잡) |
+      | **플랫폼 호환성** | UIKit/SwiftUI 모두 가능 | SwiftUI에 특화 |
+
+      ## 📘 참고 리소스
+      - https://github.com/pointfreeco/swift-composable-architecture
+    labels:
+      - documentation
+    assignees: []
+    milestone: null
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T05:33:05Z'
+    updated_at: '2025-04-16T05:33:05Z'
+    closed_at: null
+  - number: 25
+    title: Swift 테스트 코드 작성과 실행 방식 학습
+    body: |
+      - Swift에서의 ViewModel 단위 테스트 작성 방법
+      - XCTest 사용법 및 테스트 번들 설정
+      - Mock 객체 구성 전략 및 테스트 구조 설계
+    labels:
+      - documentation
+    assignees: []
+    milestone: 📚 Study Backlog
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T03:16:12Z'
+    updated_at: '2025-04-22T07:32:49Z'
+    closed_at: '2025-04-22T07:32:49Z'
+  - number: 24
+    title: 의존성 주입(DI)와 Store 패턴의 개념과 적용 시점
+    body: |
+      - DI (Dependency Injection)의 기본 개념과 Swift에서의 적용 방식
+      - Store 패턴의 구조적 특징과 TCA(Composable Architecture) 등 비교
+      - 적용 시기, 테스트 용이성 측면에서의 장단점 학습
+    labels:
+      - documentation
+    assignees: []
+    milestone: 📚 Study Backlog
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T03:16:09Z'
+    updated_at: '2025-04-16T03:16:09Z'
+    closed_at: null
+  - number: 23
+    title: 'SwiftUI 라우팅 방식 비교: NavigationLink vs Stack vs enum'
+    body: |
+      - NavigationLink, NavigationStack, enum 기반 라우팅 방식의 차이점 학습
+      - 각 방식의 코드 구조, 장단점, 테스트 가능성 비교
+      - 빠른 구현 후 enum 기반 리팩토링 전략 검토
+    labels:
+      - documentation
+    assignees: []
+    milestone: 📚 Study Backlog
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T03:16:06Z'
+    updated_at: '2025-04-16T03:16:06Z'
+    closed_at: null
+  - number: 22
+    title: MVVM 아키텍처와 모듈화 수준 이해
+    body: |
+      - MVVM 구조가 어디까지 모듈화를 지원하고 보장하는지 이해
+      - Separation of Concerns와 아키텍처 선택의 연관성 학습
+      - 다양한 레이어 분리 방식 비교 (MVVM vs VIPER 등)
+    labels:
+      - documentation
+    assignees: []
+    milestone: 📚 Study Backlog
+    author: bisor0627
+    state: OPEN
+    created_at: '2025-04-16T03:16:03Z'
+    updated_at: '2025-04-16T03:16:04Z'
+    closed_at: null
+  - number: 21
+    title: 상태 기반 UI 테스트• 재사용 가능한 컴포넌트/함수 정리
+    body: 상태 기반 UI 테스트• 재사용 가능한 컴포넌트/함수 정리
+    labels:
+      - wontfix
+      - refactoring
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T01:40:17Z'
+    updated_at: '2025-04-22T13:37:48Z'
+    closed_at: '2025-04-22T13:37:47Z'
+  - number: 20
+    title: ViewModel -> View 바인딩 점검
+    body: ViewModel -> View 바인딩 점검
+    labels:
+      - wontfix
+      - refactoring
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T01:40:15Z'
+    updated_at: '2025-04-22T07:32:24Z'
+    closed_at: '2025-04-22T07:32:24Z'
+  - number: 19
+    title: Placeholder/에러 처리 로직
+    body: Placeholder/에러 처리 로직
+    labels:
+      - wontfix
+      - feature
+      - refactoring
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T01:40:13Z'
+    updated_at: '2025-04-22T13:37:47Z'
+    closed_at: '2025-04-22T13:37:47Z'
+  - number: 18
+    title: GoalViewModel CRUD 구현
+    body: GoalViewModel CRUD 구현
+    labels:
+      - feature
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T01:40:10Z'
+    updated_at: '2025-04-17T15:00:41Z'
+    closed_at: '2025-04-17T15:00:40Z'
+  - number: 17
+    title: '✨ Feat: 목표 및 회고 모델 구현 및 바인딩 처리'
+    body: |-
+      ## ✨ Feat: 목표 및 회고 모델 구현 및 바인딩 처리
+
+      ### 🏷️ Description  
+
+      - 목표(CycleGoal/GlobalGoal), 회고(Reflection) 도메인 모델 정의
+      - MainView, SettingView에 바인딩 적용
+      - 회고는 목표와의 연결 여부에 따라 Nullable 설정
+      - 추후 회고 목록 필터링 또는 분석 기능으로 확장 가능성 고려
+
+      ### 🍪 TODO
+
+      - [ ] Goal/Reflection 모델 정의
+      - [ ] MainView 및 SettingView 바인딩 적용
+      - [ ] Preview 및 UI 데이터 흐름 테스트
+      - [ ] 단위 테스트 작성
+    labels:
+      - feature
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T01:40:08Z'
+    updated_at: '2025-04-22T07:32:24Z'
+    closed_at: '2025-04-22T07:32:23Z'
+  - number: 16
+    title: ModalView 설계
+    body: GoalInputModalView, GoalEditModalView 설계
+    labels:
+      - feature
+    assignees:
+      - bisor0627
+    milestone: DivyDot Milestone 2 – 핵심 기능 및 CRUD 구현
+    author: bisor0627
+    state: CLOSED
+    created_at: '2025-04-16T01:40:06Z'
+    updated_at: '2025-04-17T15:00:30Z'
+    closed_at: '2025-04-17T15:00:29Z'
