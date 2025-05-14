@@ -1,113 +1,136 @@
-# 🛠️ gh-yaml-sync
+# 🛠️ gh‑yaml‑sync
 
-> GitHub 이슈 및 마일스톤을 YAML 파일 기반으로 생성, 업데이트, 할당하는 Node.js CLI 툴
+> GitHub **이슈·마일스톤**을 **YAML** 파일로 **생성·업데이트·배정·백업** 하는 Node.js CLI
 
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-brightgreen)]()
-[![GitHub CLI](https://img.shields.io/badge/gh--cli-supported-blue)]()
+[![GitHub CLI](https://img.shields.io/badge/gh--cli-required-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
 ---
 
 ## 🗂 목차
-- [🛠️ gh-yaml-sync](#️-gh-yaml-sync)
+- [🛠️ gh‑yaml‑sync](#️-ghyamlsync)
   - [🗂 목차](#-목차)
   - [💡 프로젝트 동기](#-프로젝트-동기)
-  - [📌 목표](#-목표)
-  - [⚙️ 개발 환경](#️-개발-환경)
-  - [🧩 구현 기능](#-구현-기능)
-  - [📚 배운 점 / *트러블슈팅*](#-배운-점--트러블슈팅)
-  - [⚙️ 설치 및 실행](#️-설치-및-실행)
-  - [🔍 프로젝트 구조](#-프로젝트-구조)
-  - [🧪 테스트 / 시연](#-테스트--시연)
-  - [📝 추후 개선 사항](#-추후-개선-사항)
+  - [📌 기능 개요](#-기능-개요)
+  - [⚙️ 설치](#️-설치)
+  - [🚀 사용법](#-사용법)
+- [1. YAML → GitHub 동기화](#1-yaml--github-동기화)
+- [2. GitHub → YAML 백업](#2-github--yaml-백업)
+- [3. 마일스톤 재배정만 갱신](#3-마일스톤-재배정만-갱신)
+  - [🔍 내부 동작](#-내부-동작)
+  - [📚 트러블슈팅 \& 배운 점](#-트러블슈팅배운-점)
+  - [📝 추후 개선](#-추후-개선)
   - [🙋🏻‍♀️ 작성자](#️-작성자)
   - [📝 License](#-license)
 
 ---
 
 ## 💡 프로젝트 동기
+Apple Developer Academy 학습 일정·과제를 GitHub Issues/Milestones로 관리하면서,  
+매일 **YAML** 파일로 계획을 작성해 **한 번의 CLI**로 동기화하고자 **gh‑yaml‑sync**를 만들었습니다.
 
-Apple Developer Academy에서 Swift 강의를 학습하며 GitHub 기반 일정 관리 자동화를 위해 `gh-yaml-sync`를 개발하게 되었습니다.  
-매일 YAML 파일로 이슈/마일스톤을 정의하고, 이를 GitHub에 동기화하는 반복 작업을 자동화하고자 했습니다.
+---
 
-## 📌 목표
+## 📌 기능 개요
 
-- GitHub 프로젝트 학습 기록 자동화
-- YAML 파일 기반 이슈 및 마일스톤 관리
-- 깔끔한 CLI 사용 경험 제공
+| 명령 | 설명 |
+|------|------|
+| `sync` | YAML → GitHub<br>① 마일스톤 생성 → ② 이슈 생성/업데이트<br>※ 이후 마일스톤·라벨 변경은 자동 반영되지 않음 |
+| `dump` | GitHub → YAML 백업 (이슈·마일스톤 **전체 메타** 포함) |
+| `assign` | YAML 정의에 따라 **이슈를 마일스톤에 재배정** |
+| _공통_ | • YAML에만 존재하는 **라벨 자동 생성**<br>• 제목·본문이 동일하면 **중복 업데이트 건너뜀**<br>• `YYYY‑MM‑DD` 또는 자연어 Due Date를 **ISO‑8601(`T23:59:59Z`)** 로 변환 |
 
-## ⚙️ 개발 환경
+---
 
-- Node.js 18+
-- GitHub CLI (`gh`)
-- js-yaml
-- commander
-
-## 🧩 구현 기능
-
-- [x] `.yaml` 기반 이슈 생성/업데이트
-- [x] `.yaml` 기반 마일스톤 생성/업데이트
-- [x] 마일스톤-이슈 자동 배정
-- [x] GitHub 상태 → YAML로 덤프(dump)
-- [x] 중복 업데이트 방지 (변경 체크 기반)
+## ⚙️ 설치
 
 ```bash
-# 이슈와 마일스톤을 GitHub에 반영
-gh-yaml-sync sync --issues .github/plans/issues.yaml --milestones .github/plans/milestones.yaml --repo user/repo
-
-# GitHub 상태를 YAML로 저장
-gh-yaml-sync dump --issues path/to/issues.yaml --milestones path/to/milestones.yaml --repo user/repo
-
-# 이슈를 마일스톤에 배정
-gh-yaml-sync assign --issues path/to/issues.yaml --repo user/repo
+# 레포 클론 후 로컬 실행
+git clone https://github.com/bisor0627/gh-yaml-sync.git
+cd gh-yaml-sync && npm install
 ```
 
-## 📚 배운 점 / *트러블슈팅*
+> **사전 요구 사항**
+> - Node.js 18 이상
+> - GitHub CLI gh (로그인 완료)
 
-| 주제         | 요약                             |
-| ---------- | ------------------------------ |
-| GitHub CLI | gh api, gh issue edit 등 커맨드 조합 |
-| YAML 파싱    | js-yaml로 커스터마이징한 구조 읽고 쓰기      |
-| 업데이트 최적화   | 이슈/마일스톤 변경 여부 사전 비교 후 실행       |
 
-## ⚙️ 설치 및 실행
+## 🚀 사용법
 
-```bash
-node src/bin/index.js sync --issues .github/plans/issues.yaml --milestones .github/plans/milestones.yaml --repo user/repo
+# 1. YAML → GitHub 동기화
+
+```javascript
+gh-yaml-sync sync \
+  --issues .github/plans/issues.yaml \
+  --milestones .github/plans/milestones.yaml \
+  --repo user/repo
 ```
 
-## 🔍 프로젝트 구조
+# 2. GitHub → YAML 백업
 
-```
-📦gh-yaml-sync
-┣ 📂src
-┃ ┣ 📂cli              # 명령어 정의 (sync, dump, assign)
-┃ ┣ 📂utils            # yaml 파싱, gh API 헬퍼 함수
-┃ ┗ 📂bin              # 실행 엔트리포인트
-┣ 📂tests              # 테스트
-┣ 📜package.json
-┣ 📜README.md
-┗ 📜LICENSE
+```javascript
+gh-yaml-sync dump \
+  --issues backup/issues.yaml \
+  --milestones backup/milestones.yaml \
+  --repo user/repo
 ```
 
-## 🧪 테스트 / 시연
-- 로컬 .github/plans/issues.yaml, milestones.yaml 기반으로 실 사용
-- 실제 GitHub 저장소에서 동기화 검증 완료
-- dump 기능으로 주간 계획 백업 자동화
+# 3. 마일스톤 재배정만 갱신
 
-## 📝 추후 개선 사항
-- dump 시 마일스톤에 연결된 days 구조 자동 추출
-- GitHub Action과의 연계 (ex. push 시 README 자동 반영)
-- 로컬 캐시 기반으로 변경 비교 성능 향상
-- assign 명령 실행 시 변경 내역만 업데이트되도록 개선
-- 에러 메시지에 따라 자동 복구 옵션 제공 (--force, --dry-run)
+```javascript
+gh-yaml-sync assign \
+  --issues .github/plans/issues.yaml \
+  --repo user/repo
+```
+
+> TIP CI·CD에서 사용 시 GITHUB_TOKEN (PAT 또는 GitHub Actions 기본 토큰)을 env에 넣어 두면 비대화식으로 작동합니다.
+
+
+## 🔍 내부 동작
+
+1. **라벨 선처리**  
+   `ensureLabelsExist()`가 YAML에서 참조되는 모든 라벨을 조회 후,  
+   GitHub에 없으면  FFDD33 색상으로 `gh label create` 즉시 생성합니다.
+
+2. **마일스톤 동기화**  
+   - 기존 마일스톤은 건너뜀  
+   - `due_on` 필드가 **YYYY‑MM‑DD 또는 자연어**면 ISO 8601로 변환
+
+3. **이슈 동기화**  
+   - **신규** → `gh issue create`  
+   - **기존** → 제목·본문 변경 여부 비교 후 필요한 필드만 `gh issue edit`
+
+4. **배정(assign)**  
+   YAML 정의와 현재 GitHub 상태를 비교해  
+   **불일치 이슈만** `gh issue edit --milestone` 실행
+
+
+## 📚 트러블슈팅 & 배운 점
+
+| **주제**          | **인사이트**                                                                 |
+|-------------------|--------------------------------------------------**---------------------------|
+| GitHub CLI API    | `gh api + --paginate`로 모든 마일스톤을 확보                                 |
+| 라벨 동기화        | CLI에서 색상을 지정해야 생성 가능 → 일단 **고정값 FFDD33** 사용             |
+| 중복 편집 방지     | 제목·본문 `trim()` 후 비교해 API 호출 수 대폭 절감                          |
+| ISO 8601 변환      | 네이티브 `Date` 객체로 파싱 후 `toISOString()` 사용                        |
+
+
+## 📝 추후 개선
+
+- `--dry-run` 옵션으로 변경 내역 미리보기
+- 라벨 색상·설명 커스터마이즈
+- `dump` 시 마일스톤 `days` 세부 구조 자동 추출
+- 캐시 기반 변경 비교로 대형 레포 성능 최적화
+- GitHub Actions 템플릿 제공 (push → README 자동 갱신)
 
 
 ## 🙋🏻‍♀️ 작성자
 
-| 이름 | GitHub |
-|------|--------|
-| 양서린 | [@bisor0627](https://github.com/bisor0627) |
+| **이름** | **GitHub**                     |
+|----------|--------------------------------|
+| 양서린    | [@bisor0627](https://github.com/bisor0627) |
+
 
 ## 📝 License
 

@@ -1,0 +1,10 @@
+milestones:
+  - number: 6
+    title: 📚 Study Backlog
+    description: SwiftUI 기반 앱 개발을 위한 구조 설계, 의존성 관리, 테스트 전략 학습 백로그
+    state: open
+    due_on: '2025-04-30'
+    created_at: '2025-04-16T03:15:57Z'
+    updated_at: '2025-04-22T07:32:50Z'
+    open_issues: 6
+    closed_issues: 4
