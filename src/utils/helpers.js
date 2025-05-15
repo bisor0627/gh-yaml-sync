@@ -1,9 +1,14 @@
 const fs = require("fs");
-const yaml = require("js-yaml");
+const { readAndValidateYaml } = require("./validateYaml");
 const { execSync } = require("child_process");
 
-function readYaml(path) {
-  return yaml.load(fs.readFileSync(path, "utf-8"));
+function readYaml(path, kind /* "issues" | "milestones" */) {
+  const schemaFile =
+    kind === "issues"
+      ? require("path").resolve(__dirname, "../../schemas/issues.schema.json")
+      : require("path").resolve(__dirname, "../../schemas/milestones.schema.json");
+
+  return readAndValidateYaml(path, schemaFile);
 }
 
 function writeYaml(path, data) {
@@ -52,7 +57,7 @@ function ensureLabelsExist(repo, issues) {
 }
 
 function syncIssuesFromYaml(path, repo) {
-  const issuesYaml = readYaml(path);
+  const issuesYaml = readYaml(path, "issues");
   ensureLabelsExist(repo, issuesYaml.issues || []);
   const ghIssues = JSON.parse(
     execSync(`gh issue list ${getRepoFlag(repo)} --state all --json number,title,body,milestone`, {
@@ -94,7 +99,7 @@ function syncIssuesFromYaml(path, repo) {
 }
 
 function assignIssuesToMilestones(path, repo) {
-  const issuesYaml = readYaml(path);
+  const issuesYaml = readYaml(path, "issues");
   const ghIssues = JSON.parse(
     execSync(`gh issue list ${getRepoFlag(repo)} --state all --json number,title,milestone`, {
       encoding: "utf-8",
@@ -130,7 +135,7 @@ function assignIssuesToMilestones(path, repo) {
 }
 
 function syncMilestonesFromYaml(path, repo) {
-  const yamlData = readYaml(path);
+  const yamlData = readYaml(path, "milestones");
   const milestones = yamlData.milestones || [];
 
   const existing = JSON.parse(

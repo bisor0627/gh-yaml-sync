@@ -1,0 +1,2 @@
+issues:
+  - body:      # ← 'title' 필수 속성 삭제
