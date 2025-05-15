@@ -56,9 +56,11 @@ function ensureLabelsExist(repo, issues) {
   }
 }
 
-function syncIssuesFromYaml(path, repo) {
+function syncIssuesFromYaml(path, repo, dryRun = false) {
   const issuesYaml = readYaml(path, "issues");
-  ensureLabelsExist(repo, issuesYaml.issues || []);
+  if (!dryRun) {
+    ensureLabelsExist(repo, issuesYaml.issues || []);
+  }
   const ghIssues = JSON.parse(
     execSync(`gh issue list ${getRepoFlag(repo)} --state all --json number,title,body,milestone`, {
       encoding: "utf-8",
@@ -71,11 +73,13 @@ function syncIssuesFromYaml(path, repo) {
     const number = titleToNumber[title];
 
     if (!number) {
-      console.log(`✏️ 생성: ${title}`);
+      console.log(dryRun
+        ? `📝 생성 예정 (이슈): ${title}`
+        : `✏️ 생성: ${title}`);
       let cmd = `gh issue create ${getRepoFlag(repo)} --title "${title}" --body "${body}"`;
       if (milestone) cmd += ` --milestone "${milestone}"`;
       if (labels.length) cmd += ` --label "${labels.join(",")}"`;
-      execSync(cmd, { stdio: "inherit"});
+      if (!dryRun) execSync(cmd, { stdio: "inherit" });
     } else {
       const current = JSON.parse(
         execSync(`gh issue view ${number} ${getRepoFlag(repo)} --json title,body`, {
@@ -86,11 +90,15 @@ function syncIssuesFromYaml(path, repo) {
       const needsBody = current.body?.trim() !== body?.trim();
 
       if (needsTitle || needsBody) {
-        console.log(`✏️ 업데이트: #${number} ${needsTitle ? "📄 제목" : ""} ${needsBody ? "📝 본문" : ""}`);
+        console.log(dryRun
+          ? `📝 업데이트 예정: #${number} ${needsTitle ? "📄 제목" : ""} ${needsBody ? "📝 본문" : ""}`
+          : `✏️ 업데이트: #${number} ${needsTitle ? "📄 제목" : ""} ${needsBody ? "📝 본문" : ""}`);
         let cmd = `gh issue edit ${number} ${getRepoFlag(repo)}`;
         if (needsTitle) cmd += ` --title "${title}"`;
         if (needsBody) cmd += ` --body "${body}"`;
-        execSync(cmd, { stdio: "inherit", env: { ...process.env, EDITOR: "true" } });
+        if (!dryRun) {
+          execSync(cmd, { stdio: "inherit", env: { ...process.env, EDITOR: "true" } });
+        }
       } else {
         console.log(`⏩ 변경 없음: #${number} (${title})`);
       }
@@ -102,7 +110,7 @@ function assignIssuesToMilestones(path, repo) {
   const issuesYaml = readYaml(path, "issues");
   const ghIssues = JSON.parse(
     execSync(`gh issue list ${getRepoFlag(repo)} --state all --json number,title,milestone`, {
-      encoding: "utf-8",
+      encoding: "utf-8"
     })
   );
   const titleToInfo = Object.fromEntries(
@@ -134,32 +142,54 @@ function assignIssuesToMilestones(path, repo) {
   }
 }
 
-function syncMilestonesFromYaml(path, repo) {
+function syncMilestonesFromYaml(path, repo, dryRun = false) {
   const yamlData = readYaml(path, "milestones");
   const milestones = yamlData.milestones || [];
 
   const existing = JSON.parse(
     execSync(`gh api repos/${repo}/milestones --paginate`, { encoding: "utf-8" })
   );
-  const titleToMilestone = Object.fromEntries(existing.map((m) => [m.title, m]));
+  const existingByTitle = Object.fromEntries(existing.map((m) => [m.title, m]));
 
   for (const m of milestones) {
-    const exists = titleToMilestone[m.title];
+    const exists = existingByTitle[m.title];
+
     if (exists) {
-      console.log(`⏭️ 마일스톤 존재: ${m.title}`);
-      continue;
+      const sameDescription = (exists.description || "") === (m.description || "");
+      const sameDue = (exists.due_on?.split("T")[0] || "") === (m.due_on || m.due || "");
+      const sameState = exists.state === (m.state || "open");
+
+      if (sameDescription && sameDue && sameState) {
+        console.log(`⏭️ 마일스톤 동일: ${m.title}`);
+        continue;
+      } else {
+        console.log(dryRun
+          ? `📝 업데이트 예정 (마일스톤): ${m.title}`
+          : `♻️ 마일스톤 업데이트: ${m.title}`);
+        if (!dryRun) {
+          const dueDate = parseDueDate(m.due_on || m.due);
+          const cmd = [
+            `gh api repos/${repo}/milestones/${exists.number} -X PATCH`,
+            m.description ? `-f description='${m.description}'` : "",
+            dueDate ? `-f due_on='${dueDate}'` : "",
+            m.state ? `-f state=${m.state}` : "",
+          ].join(" ");
+          execSync(cmd, { stdio: "inherit" });
+        }
+        continue;
+      }
     }
 
-    console.log(`📌 마일스톤 생성: ${m.title}`);
+    console.log(dryRun
+      ? `📝 생성 예정 (마일스톤): ${m.title}`
+      : `📌 마일스톤 생성: ${m.title}`);
     const dueDate = parseDueDate(m.due_on || m.due);
-   
     const cmd = [
       `gh api repos/${repo}/milestones -f title='${m.title}'`,
       m.description ? `-f description='${m.description}'` : "",
-      dueDate?  ` -f due_on='${dueDate}'` : "",
+      dueDate ? ` -f due_on='${dueDate}'` : "",
     ].join(" ");
-
-    execSync(cmd, { stdio: "inherit" });
+    if (!dryRun) execSync(cmd, { stdio: "inherit" });
   }
 }
 
@@ -188,7 +218,6 @@ function dumpIssues(path, repo) {
   console.log(`📥 이슈 ${cleaned.length}개를 YAML로 저장했습니다: ${path}`);
 }
 
-
 function dumpMilestones(path, repo) {
   const milestones = JSON.parse(
     execSync(`gh api repos/${repo}/milestones --paginate`, { encoding: "utf-8" })
@@ -212,15 +241,12 @@ function dumpMilestones(path, repo) {
   console.log(`📦 마일스톤 ${mapped.length}개를 YAML로 저장했습니다: ${path}`);
 }
 
-
-
 module.exports = {
-  // 기존 함수들과 함께 추가
   syncIssuesFromYaml,
   syncMilestonesFromYaml,
   assignIssuesToMilestones,
-  dumpIssues, 
-  dumpMilestones, 
+  dumpIssues,
+  dumpMilestones,
   readYaml,
   writeYaml,
 };
