@@ -1,8 +1,8 @@
-const Ajv        = require("ajv");
+const Ajv = require("ajv");
 const addFormats = require("ajv-formats");
-const fs         = require("fs");
-const yaml       = require("js-yaml");
-const path       = require("path");
+const fs = require("fs");
+const yaml = require("js-yaml");
+const path = require("path");
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
@@ -20,9 +20,14 @@ function readAndValidateYaml(filePath, schemaPath) {
   const validate = ajv.compile(schema);
 
   if (!validate(data)) {
-    const errors = validate.errors
-      .map(e => `• ${e.instancePath || '(root)'} ${e.message}`)
-      .join("\n");
+    const errors = validate.errors.map(e => {
+      const path = e.instancePath || '(root)';
+      const message = e.message;
+      const extra = e.params?.additionalProperty
+        ? ` → '${e.params.additionalProperty}' 제거 필요`
+        : "";
+      return `• ${path} ${message}${extra}`;
+    }).join("\n");
     throw new Error(
       `❌ YAML 형식 오류 (${path.basename(filePath)})\n${errors}`
     );
