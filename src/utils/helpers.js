@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { readAndValidateYaml } = require("./validateYaml");
 const { execSync } = require("child_process");
+const yaml = require("js-yaml");
 
 function readYaml(path, kind /* "issues" | "milestones" */) {
   const schemaFile =
@@ -241,6 +242,11 @@ function dumpMilestones(path, repo) {
   console.log(`📦 마일스톤 ${mapped.length}개를 YAML로 저장했습니다: ${path}`);
 }
 
+function dumpCurrentStateToYaml(issuesPath, milestonesPath, repo) {
+  dumpIssues(issuesPath, repo);
+  dumpMilestones(milestonesPath, repo);
+}
+
 module.exports = {
   syncIssuesFromYaml,
   syncMilestonesFromYaml,
@@ -249,4 +255,5 @@ module.exports = {
   dumpMilestones,
   readYaml,
   writeYaml,
+  dumpCurrentStateToYaml,
 };
