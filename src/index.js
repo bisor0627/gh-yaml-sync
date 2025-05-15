@@ -1,1 +1,2 @@
-module.exports = require("./cli/commands");
+const { runCLI } = require("./cli/commands");
+module.exports = { runCLI };

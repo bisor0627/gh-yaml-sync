@@ -2,7 +2,7 @@ const { program } = require("commander");
 const { syncYamlToGitHub } = require("./sync");
 const { dumpGitHubToYaml } = require("./dump");
 const { assignIssues } = require("./assign");
-
+const { showDiff } = require("./diff");
 /**
  * CLI 하위 커맨드에서 throw-된 에러를 잡아
  * 메시지만 출력하고 즉시 종료(exit code 1)
@@ -47,6 +47,14 @@ function runCLI() {
     .requiredOption("--issues <path>", "Path to issues.yaml")
     .requiredOption("--repo <owner/repo>", "GitHub repository (e.g., user/repo)")
     .action(processCLI(assignIssues));
+
+  program
+    .command("diff")
+    .description("Show diff between YAML and GitHub state")
+    .requiredOption("--issues <path>", "Path to issues.yaml")
+    .requiredOption("--milestones <path>", "Path to milestones.yaml")
+    .requiredOption("--repo <owner/repo>", "GitHub repository (e.g., user/repo)")
+    .action(processCLI(showDiff));
 
   program.parse();
 }
