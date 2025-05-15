@@ -10,15 +10,20 @@
         "type": "object",
         "required": ["title"],
         "properties": {
-          "title":      { "type": "string", "minLength": 1 },
-          "body":       { "type": "string" },
-          "labels":     {
+          "title": { "type": "string", "minLength": 1 },
+          "body": { "type": "string" },
+          "labels": {
             "type": "array",
             "items": { "type": "string" }
           },
-          "milestone":  { "type": ["string", "null"] },
-          "number":     { "type": "integer", "minimum": 1 },
-          "assignees":  {
+          "milestone": { "type": ["string", "null"] },
+          "number": { "type": "integer", "minimum": 1 },
+          "author": { "type": "string" },
+          "state": { "type": "string", "enum": ["open", "closed", "OPEN", "CLOSED"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "closed_at": { "type": ["string", "null"], "format": "date-time" },
+          "assignees": {
             "type": "array",
             "items": { "type": "string" }
           }

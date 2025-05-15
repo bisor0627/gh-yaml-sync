@@ -10,15 +10,21 @@
         "type": "object",
         "required": ["title"],
         "properties": {
-          "title":       { "type": "string",  "minLength": 1 },
+          "number": { "type": "number" },
+          "title": { "type": "string" },
           "description": { "type": "string" },
-          "due_on":      { "type": "string",  "format": "date" },
-          "state":       { "type": "string",  "enum": ["open", "closed"] },
-          "number":      { "type": "integer", "minimum": 1 }
+          "state": {
+            "type": "string",
+            "enum": ["open", "closed"]
+          },
+          "due_on": { "type": "string", "format": "date" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "open_issues": { "type": "number" },
+          "closed_issues": { "type": "number" }
         },
         "additionalProperties": false
       }
     }
-  },
-  "additionalProperties": false
+  }
 }
