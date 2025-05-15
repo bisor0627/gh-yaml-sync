@@ -57,7 +57,7 @@ function ensureLabelsExist(repo, issues) {
   }
 }
 
-function syncIssuesFromYaml(path, repo, dryRun = false) {
+function syncIssuesFromYaml(path, repo, dryRun = false, rollbackState) {
   const issuesYaml = readYaml(path, "issues");
   if (!dryRun) {
     ensureLabelsExist(repo, issuesYaml.issues || []);
@@ -80,7 +80,17 @@ function syncIssuesFromYaml(path, repo, dryRun = false) {
       let cmd = `gh issue create ${getRepoFlag(repo)} --title "${title}" --body "${body}"`;
       if (milestone) cmd += ` --milestone "${milestone}"`;
       if (labels.length) cmd += ` --label "${labels.join(",")}"`;
-      if (!dryRun) execSync(cmd, { stdio: "inherit" });
+      if (!dryRun) {
+        const output = execSync(cmd + " --json number", { encoding: "utf-8" });
+        try {
+          const created = JSON.parse(output);
+          if (rollbackState && created && created.number) {
+            rollbackState.issues.push(created.number);
+          }
+        } catch (e) {
+          // 만약 gh 출력이 JSON이 아니면 무시
+        }
+      }
     } else {
       const current = JSON.parse(
         execSync(`gh issue view ${number} ${getRepoFlag(repo)} --json title,body`, {
@@ -143,7 +153,7 @@ function assignIssuesToMilestones(path, repo) {
   }
 }
 
-function syncMilestonesFromYaml(path, repo, dryRun = false) {
+function syncMilestonesFromYaml(path, repo, dryRun = false, rollbackState) {
   const yamlData = readYaml(path, "milestones");
   const milestones = yamlData.milestones || [];
 
@@ -190,7 +200,17 @@ function syncMilestonesFromYaml(path, repo, dryRun = false) {
       m.description ? `-f description='${m.description}'` : "",
       dueDate ? ` -f due_on='${dueDate}'` : "",
     ].join(" ");
-    if (!dryRun) execSync(cmd, { stdio: "inherit" });
+    if (!dryRun) {
+      const output = execSync(cmd, { stdio: "pipe", encoding: "utf-8" });
+      try {
+        const created = JSON.parse(output);
+        if (rollbackState && created && created.number) {
+          rollbackState.milestones.push(created.number);
+        }
+      } catch (e) {
+        // 만약 gh api 출력이 JSON이 아니면 무시
+      }
+    }
   }
 }
 
@@ -247,6 +267,25 @@ function dumpCurrentStateToYaml(issuesPath, milestonesPath, repo) {
   dumpMilestones(milestonesPath, repo);
 }
 
+function rollbackChanges(rollbackState, repo) {
+  for (const issueNum of (rollbackState.issues || []).reverse()) {
+    try {
+      execSync(`gh issue delete ${issueNum} ${getRepoFlag(repo)} --yes`);
+      console.warn(`🗑️ 롤백: 이슈 #${issueNum} 삭제`);
+    } catch (e) {
+      console.error(`⚠️ 이슈 삭제 실패: #${issueNum}`);
+    }
+  }
+  for (const msNum of (rollbackState.milestones || []).reverse()) {
+    try {
+      execSync(`gh api repos/${repo}/milestones/${msNum} -X DELETE`);
+      console.warn(`🗑️ 롤백: 마일스톤 #${msNum} 삭제`);
+    } catch (e) {
+      console.error(`⚠️ 마일스톤 삭제 실패: #${msNum}`);
+    }
+  }
+}
+
 module.exports = {
   syncIssuesFromYaml,
   syncMilestonesFromYaml,
@@ -256,4 +295,5 @@ module.exports = {
   readYaml,
   writeYaml,
   dumpCurrentStateToYaml,
+  rollbackChanges,
 };
