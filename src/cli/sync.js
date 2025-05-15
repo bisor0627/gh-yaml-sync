@@ -1,18 +1,27 @@
 const {
   syncIssuesFromYaml,
   syncMilestonesFromYaml,
-  dumpCurrentStateToYaml
+  dumpCurrentStateToYaml,
+  rollbackChanges
 } = require("../utils/helpers");
 
 function syncYamlToGitHub(options) {
   const { issues, milestones, repo } = options;
   const dryRun = !!options.dryRun;
-  syncMilestonesFromYaml(milestones, repo, dryRun);
-  syncIssuesFromYaml(issues, repo, dryRun);
-  // 변경 반영 이후 최신 상태를 덮어씌움
-  if (!dryRun) {
-    console.log("📝 리모트 기준으로 YAML을 덮어씁니다...");
-    dumpCurrentStateToYaml(issues, milestones, repo);
+
+  const rollbackState = { issues: [], milestones: [] };
+
+  try {
+    syncMilestonesFromYaml(milestones, repo, dryRun, rollbackState);  // ← YAML 읽기 포함
+    syncIssuesFromYaml(issues, repo, dryRun, rollbackState);
+    if (!dryRun) {
+      console.log("📝 리모트 기준으로 YAML을 덮어씁니다...");
+      dumpCurrentStateToYaml(issues, milestones, repo);
+    }
+  } catch (err) {
+    console.error("💥 오류 발생, 롤백을 시작합니다...");
+    rollbackChanges(rollbackState, repo);
+    throw err;
   }
 }
 

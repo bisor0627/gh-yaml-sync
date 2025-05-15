@@ -1,0 +1,6 @@
+issues:
+  - title: "Rollback Test: Trigger Failure"
+    body: "This will succeed"
+  - title: "Invalid ❌"       # ← gh에서 거절될 수 있는 잘못된 제목
+    body: null
+
