@@ -1,0 +1,34 @@
+issues:
+  - number: 1
+    title: "로그인 기능 구현"
+    body: "사용자 로그인을 위한 기본 기능을 구현합니다."
+    labels: ["feature"]
+    assignees: ["bisor0627"]
+    milestone: "기능 구현"
+    author: "bisor0627"
+    state: "OPEN"
+    created_at: "2025-05-10T09:00:00Z"
+    updated_at: "2025-05-10T09:00:00Z"
+    closed_at: null
+  - number: 2
+    title: "버그: 비밀번호 재설정 오류"
+    body: "비밀번호 재설정 시 이메일이 전송되지 않는 문제를 수정합니다."
+    labels: ["bug"]
+    assignees: ["bisor0627"]
+    milestone: "버그 수정"
+    author: "bisor0627"
+    state: "CLOSED"
+    created_at: "2025-05-11T10:00:00Z"
+    updated_at: "2025-05-12T08:00:00Z"
+    closed_at: "2025-05-12T08:00:00Z"
+  - number: 3
+    title: "문서화: API 명세 추가"
+    body: "REST API 엔드포인트 명세를 문서화합니다."
+    labels: ["docs"]
+    assignees: []
+    milestone: "문서화"
+    author: "bisor0627"
+    state: "OPEN"
+    created_at: "2025-05-13T12:00:00Z"
+    updated_at: "2025-05-13T12:00:00Z"
+    closed_at: null

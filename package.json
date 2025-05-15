@@ -16,7 +16,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "echo \"(no tests yet)\" && exit 0"
+    "test:schema": "node tests/schema.test.js"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,12 @@
   },
   "homepage": "https://github.com/bisor0627/gh-yaml-sync#readme",
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "commander": "^13.1.0",
     "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/ajv": "^0.0.5"
   }
 }

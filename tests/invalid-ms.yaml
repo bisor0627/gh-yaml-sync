@@ -1,0 +1,8 @@
+milestones:
+  - title: ""  # 제목이 비어 있음 (필수값 누락)
+    due_on: "2025-13-40"  # 잘못된 날짜 형식
+    state: "unknown"  # 허용되지 않는 상태값
+  - due_on: "2025-05-10"  # title 필드 누락
+  - title: "Valid Title"
+    due_on: "not-a-date"  # 날짜 형식 아님
+    state: "open"

@@ -1,0 +1,10 @@
+milestones:
+  - title: "기능 구현"
+    due_on: "2025-05-20"
+    state: "open"
+  - title: "버그 수정"
+    due_on: "2025-06-01"
+    state: "closed"
+  - title: "문서화"
+    due_on: "2025-06-15"
+    state: "open"
