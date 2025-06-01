@@ -27,8 +27,8 @@ function runCLI() {
   program
     .command("sync")
     .description("Sync issues and milestones from YAML to GitHub")
-    .requiredOption("--issues <path>", "Path to issues.yaml")
-    .requiredOption("--milestones <path>", "Path to milestones.yaml")
+    .option("--issues <path>", "Path to issues.yaml")
+    .option("--milestones <path>", "Path to milestones.yaml")
     .requiredOption("--repo <owner/repo>", "GitHub repository (e.g., user/repo)")
     .option("--dry-run", "Print changes without applying them")
     .action(processCLI(syncYamlToGitHub));
