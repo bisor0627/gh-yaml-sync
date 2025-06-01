@@ -12,9 +12,13 @@ function syncYamlToGitHub(options) {
   const rollbackState = { issues: [], milestones: [] };
 
   try {
-    syncMilestonesFromYaml(milestones, repo, dryRun, rollbackState);  // ← YAML 읽기 포함
-    syncIssuesFromYaml(issues, repo, dryRun, rollbackState);
-    if (!dryRun) {
+    if (milestones) {
+      syncMilestonesFromYaml(milestones, repo, dryRun, rollbackState);
+    }
+    if (issues) {
+      syncIssuesFromYaml(issues, repo, dryRun, rollbackState);
+    }
+    if (!dryRun && (issues || milestones)) {
       console.log("📝 리모트 기준으로 YAML을 덮어씁니다...");
       dumpCurrentStateToYaml(issues, milestones, repo);
     }
